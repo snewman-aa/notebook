@@ -25,7 +25,7 @@ class NoteBook:
         self.add_note(note)
 
     def list_notes(self):
-        return list(self._notes)
+        return list(self._notes.values())
 
     def search(self, query: str):
         notes = [note.name for note in self._notes.values() if query in note.content]
