@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status, Response
 from note import NoteBook, Note
 
 
@@ -33,15 +33,22 @@ def read(name: str):
     """Reads a note from the notebook"""
     note = notebook.read(name)
     if note:
-        return {"note": note}
-    raise HTTPException(status_code=404, detail="Note not found")
+        return note
+    else:
+        raise HTTPException(status_code=404, detail="Note not found")
 
 
 @api.delete("/note")
 def remove(name: str):
     """Removes a note from the notebook"""
-    notebook.remove(name)
-    return {"message": f'Note "{name}" removed successfully'}
+    removed = notebook.remove(name)
+    if removed:
+        return Response(
+            content={"message": f'Note "{name}" removed successfully'},
+            media_type="application/json",
+            status_code=status.HTTP_204_NO_CONTENT)
+    else:
+        raise HTTPException(status_code=404, detail="Note not found")
 
 
 @api.post("/add")
@@ -53,7 +60,9 @@ def write(note: Note):
     """
     name = note.name
     if notebook.read(name):
-        return {"message": f'Note "{name}" already exists'}
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"A note with the name '{name}' already exists.")
     notebook.add_note(note)
     return {"message": f'Note "{name}" written successfully'}
 
@@ -66,10 +75,15 @@ def find(term: str):
     :param term:
     :return: list of note names
     """
+    if not term:
+        raise HTTPException(status_code=400, detail="Invalid search term.")
     notes = notebook.search(term)
-    if notes:
-        return {"term": term, "notes": notes}
-    raise HTTPException(status_code=404, detail="No notes found")
+    if notes is None:
+        raise HTTPException(status_code=404,
+                            detail="No notes found with the search term")
+    else:
+        return {"notes": notes, "term": term}
+
 
 
 

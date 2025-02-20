@@ -14,11 +14,18 @@ class NoteBook:
     def _create_note(name: str, content: str):
         return Note(name=name, content=content)
 
+    @property
+    def __len__(self):
+        return len(self._notes)
+
     def add_note(self, note: Note):
         self._notes.update({note.name: note})
 
     def remove(self, name: str):
-        self._notes.pop(name)
+        if name not in self._notes:
+            return False
+        return self._notes.pop(name)
+
 
     def write(self, name: str, content: str):
         note = self._create_note(name, content)
