@@ -12,7 +12,7 @@
     </form>
     <ul>
         {% for note in notes %}
-            <li><a href="{{ url_for('note_detail', name=note.name) }}">{{ note.name }}</a></li>
+            <li><a href="{{ url_for('note_detail', name=note) }}">{{ note }}</a></li>
         {% endfor %}
     </ul>
     <h2>Write a new note</h2>
