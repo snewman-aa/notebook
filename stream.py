@@ -32,15 +32,20 @@ def get_note_names():
     return list(content.get("notes"))
 
 
-def display_note(note_name: str, display_name, display_content):
-    if not note_name:
+def display_note():
+    if not (note_name := st.session_state.selected_note):
         return
     response = read_note(note_name)
     if handle_api_error(response):
         return
     note = response.json()
-    display_name(note.get('name'))
-    display_content(note.get('content'))
+    st.session_state.title_box = note.get("name")
+    st.session_state.content_box = note.get("content")
+
+
+def display_search_result(note):
+    st.session_state.selected_note = note
+    display_note()
 
 
 def add_note(name: str, content: str):
@@ -70,15 +75,26 @@ def handle_api_error(response):
 
 st.title("Notebook App")
 
+if "title_box" not in st.session_state:
+    st.session_state.title = ""
+if "content_box" not in st.session_state:
+    st.session_state.content = ""
+if "selected_note" not in st.session_state:
+    st.session_state.selected_note = ""
+
 
 view_tab, add_tab = st.tabs(["View Notes", "Add Note"])
 
 with view_tab:
-    selected_note = st.selectbox("Select a note",
-                                 get_note_names(),
-                                 key="view",
-                                 placeholder="Select a note")
-    display_note(selected_note, view_tab.header, view_tab.write)
+    st.session_state.selected_note = (
+        st.selectbox("Select a note",
+                     get_note_names(),
+                     key="view",
+                     placeholder="Select a note",
+                     help="Select a note to view its content."))
+    st.button("View Note", on_click=display_note)
+    title = st.text_input("Title", key="title_box", disabled=True,)
+    content = st.text_area("Content", key="content_box", disabled=True)
 
 with add_tab:
     name = st.text_input("Name")
@@ -101,8 +117,9 @@ with st.sidebar:
             else:
                 notes = response.json().get("notes")
                 if notes:
-                    st.header(f"Notes containing '{search_term}'")
+                    st.write(f"Notes containing '{search_term}':")
                     for note in notes:
-                        st.write(note)
+                        st.button(note, key=f"search_result_{note}",
+                                  on_click=display_search_result, args=(note,))
                 else:
                     st.write(f"No notes found containing '{search_term}'.")
