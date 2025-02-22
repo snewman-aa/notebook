@@ -3,6 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Notes</title>
+    <style>
+        body {
+            font-family: Noto Sans, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin: 0;
+            padding: 1em;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ccc;
+        }
+        form {
+            padding: 1em;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ccc;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 0.5em;
+            margin: 0.5em 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        button {
+            padding: 0.5em 1em;
+            margin: 0.5em 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e0e0e0;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 1em;
+            border-bottom: 1px solid #ccc;
+        }
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <h1>Notes</h1>
@@ -12,7 +63,7 @@
     </form>
     <ul>
         {% for note in notes %}
-            <li><a href="{{ url_for('note_detail', name=note) }}">{{ note }}</a></li>
+            <li><a href="{{ url_for('note_detail', name=note.name) }}">{{ note.name }}</a></li>
         {% endfor %}
     </ul>
     <h2>Write a new note</h2>

@@ -6,12 +6,27 @@ notebook = NoteBook()
 
 @app.route('/')
 def index():
+    """
+    This is the main page of the app.
+    It lists all the notes if there is no query,
+    otherwise it lists the notes whose contents contain the query.
+    """
     query = request.args.get('query', '')
-    notes = notebook.search(query) if query else notebook.list_notes()
+    if query:
+        note_names = notebook.search(query)
+        notes = [notebook.read(name) for name in note_names]
+    else:
+        notes = notebook.list_notes()
+    if not notes:
+        return render_template('index.html', notes=[], query=query)
     return render_template('index.html', notes=notes, query=query)
 
 @app.route('/note/<name>')
 def note_detail(name):
+    """
+    Displays the content of a note.
+    :param name:
+    """
     note = notebook.read(name)
     if note:
         return render_template('note.html', note=note)
@@ -19,6 +34,10 @@ def note_detail(name):
 
 @app.route('/write', methods=['POST'])
 def write_note():
+    """
+    Adds a note to the notebook.
+    :return:
+    """
     name = request.form['name']
     content = request.form['content']
     if notebook.read(name):
@@ -26,10 +45,17 @@ def write_note():
     notebook.write(name, content)
     return redirect(url_for('index'))
 
-@app.route('/search', methods=['POST'])
+@app.route('/search', methods=['GET'])
 def search():
+    """
+    This isn't actually used in the app,
+    but it's here to be accessible via the API.
+    """
     query = request.form['query']
-    notes = notebook.search(query)
+    note_names = notebook.search(query)
+    notes = [notebook.read(name) for name in note_names]
+    if not notes:
+        return "No notes found", 404
     return render_template('index.html', notes=notes, query=query)
 
 if __name__ == '__main__':
