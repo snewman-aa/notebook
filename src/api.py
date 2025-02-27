@@ -1,3 +1,6 @@
+"""
+Run `fastapi dev api.py` to start the API server.
+"""
 from fastapi import FastAPI, HTTPException, status, Response
 from note import NoteBook, Note
 
@@ -84,6 +87,9 @@ def find(term: str):
     else:
         return {"notes": notes, "term": term}
 
+def app():
+    import uvicorn
+    uvicorn.run(api, host="0.0.0.0", port=8000)
 
-
-
+if __name__ == "__main__":
+    app()

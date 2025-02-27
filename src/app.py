@@ -58,5 +58,10 @@ def search():
         return "No notes found", 404
     return render_template('index.html', notes=notes, query=query)
 
-if __name__ == '__main__':
+
+def run():
     app.run(debug=True)
+
+
+if __name__ == '__main__':
+    run()
