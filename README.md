@@ -9,6 +9,14 @@ Then, in the project directory run the following command to install the package:
 pip install -e .
 ```
 
+This will include the following dependencies:
+```
+fastapi[standard]>=0.115.8,
+flask>=3.1.0,
+streamlit>=1.42.0,
+uvicorn>=0.34.0
+```
+
 ## Usage
 
 ### Flask
