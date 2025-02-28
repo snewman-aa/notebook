@@ -7,7 +7,7 @@ name = "notebook"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 dependencies = [
     "fastapi[standard]>=0.115.8",
     "flask>=3.1.0",
@@ -19,6 +19,6 @@ dependencies = [
 package-dir = {"" = "src"}
 
 [project.scripts]
-fast_app = "api:app"
-stream_app = "stream:run"
-flask_app = "app:run"
+fast-app = "api:app"
+stream-app = "stream:run"
+flask-app = "app:run"
