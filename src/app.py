@@ -1,7 +1,8 @@
 from flask import Flask, request, render_template, redirect, url_for
 from note import NoteBook
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), '../templates'))
 notebook = NoteBook()
 
 @app.route('/')
