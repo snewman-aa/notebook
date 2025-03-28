@@ -2,6 +2,7 @@
 Run `fastapi dev api.py` to start the API server.
 """
 from fastapi import FastAPI, HTTPException, status, Response
+from fastapi.responses import PlainTextResponse
 from note import NoteBook, Note
 
 
@@ -9,15 +10,17 @@ api = FastAPI()
 notebook = NoteBook()
 
 
-@api.get("/")
+@api.get("/", response_class=PlainTextResponse)
 def read_root():
     """Returns the instructions for the API"""
-    message = ("/static/instructions.html for the main page"
-               " /list for the list of notes"
-               " /write?name=NAME&content=CONTENT to add a note"
-               " /find?term=TERM to search for a note by content"
-               " /note/Note-Name to read a note by name")
-    return {"message": message}
+    message = (
+        "/static/instructions.html for the main page\n"
+        "/list for the list of notes\n"
+        "/write?name=NAME&content=CONTENT to add a note\n"
+        "/find?term=TERM to search for a note by content\n"
+        "/note/Note-Name to read a note by name"
+    )
+    return message
 
 
 @api.get("/notes")
